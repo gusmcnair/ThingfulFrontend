@@ -1,36 +1,54 @@
 import React, { Component } from 'react'
 import { Button, Input, Required } from '../Utils/Utils'
+import ApiAuthService from '../../services/api-auth-service'
 
 export default class RegistrationForm extends Component {
   static defaultProps = {
     onRegistrationSuccess: () => {}
   }
 
-  state = { error: null }
+  constructor(){
+    super()
+    this.state = {
+      error: null,
+    }
+  }
 
   handleSubmit = ev => {
     ev.preventDefault()
     const { full_name, nick_name, user_name, password } = ev.target
 
-    console.log('registration form submitted')
-    console.log({ full_name, nick_name, user_name, password })
+    this.setState({ error: null })
+    ApiAuthService.postUser({
+      user_name: user_name.value,
+      password: password.value,
+      full_name: full_name.value,
+      nickname: nick_name.value,
+    })
+      .then(user => {
+        full_name.value = ''
+        nick_name.value = ''
+        user_name.value = ''
+        password.value = ''
+        this.props.onRegistrationSuccess()
+        if(user.error){this.setState({error: user.error})}
+      })
+      .catch(error => {
+        this.setState({
+          error: error,
+        })
+      })
 
-    full_name.value = ''
-    nick_name.value = ''
-    user_name.value = ''
-    password.value = ''
-    this.props.onRegistrationSuccess()
   }
 
   render() {
-    const { error } = this.state
     return (
       <form
         className='RegistrationForm'
         onSubmit={this.handleSubmit}
       >
-        <div role='alert'>
-          {error && <p className='red'>{error}</p>}
+        <div>
+          <p>{this.state.error}</p>
         </div>
         <div className='full_name'>
           <label htmlFor='RegistrationForm__full_name'>

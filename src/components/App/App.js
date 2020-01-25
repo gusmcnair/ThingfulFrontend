@@ -36,7 +36,7 @@ class App extends Component {
               path={'/login'}
               component={LoginPage}
             />
-            <PublicOnlyRoute
+            <Route
               path={'/register'}
               component={RegistrationPage}
             />

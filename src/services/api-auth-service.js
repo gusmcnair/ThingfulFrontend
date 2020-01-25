@@ -13,6 +13,20 @@ const ApiAuthService = {
             return res.json()
         })
         .catch(err => console.log(err))
+    },
+    postUser(user){
+        console.log('hello!')
+        return fetch(`http://localhost:8000/api/users`, {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+            },
+            body: JSON.stringify(user),
+        })
+        .then(res => {
+            return res.json()
+        })
+        .catch(err => console.log(err))
     }
 }
 
